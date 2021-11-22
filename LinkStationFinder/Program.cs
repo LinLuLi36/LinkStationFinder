@@ -72,11 +72,11 @@ namespace LinkStationFinder
 
                                 if (linkStationInfo.Length == 3)
                                 {
-                                    if (double.TryParse(deviceInfo[0], out var xLinkStationPosition))
+                                    if (double.TryParse(linkStationInfo[0], out var xLinkStationPosition))
                                     {
-                                        if (double.TryParse(deviceInfo[1], out var yLinkStationPosition))
+                                        if (double.TryParse(linkStationInfo[1], out var yLinkStationPosition))
                                         {
-                                            if (double.TryParse(deviceInfo[3], out var reach))
+                                            if (double.TryParse(linkStationInfo[2], out var reach))
                                             {
                                                 var linkStation = new LinkStation(xLinkStationPosition,
                                                     yLinkStationPosition, reach);
@@ -120,7 +120,7 @@ namespace LinkStationFinder
                     else
                     {
                         var bestLinkStation = powerResults.FirstOrDefault(p => p.Power.Equals(highestPower));
-                        Console.WriteLine($"Best link station for device at point {deviceInput} is {bestLinkStation?.LinkStation.XPosition}, {bestLinkStation?.LinkStation.YPosition} with power {bestLinkStation?.Power}");
+                        Console.WriteLine($"Best link station for device at point {deviceInput} is {bestLinkStation?.LinkStation.XPosition},{bestLinkStation?.LinkStation.YPosition},{bestLinkStation?.LinkStation.Reach} with power {bestLinkStation?.Power}");
                     }
                 }
             }
@@ -130,7 +130,7 @@ namespace LinkStationFinder
         {
             var power = linkStation.Reach - Math.Sqrt((Math.Pow(linkStation.XPosition - device.XPosition, 2) +
                                                        Math.Pow(linkStation.YPosition - device.YPosition, 2)));
-            return new PowerCalculationResult(device, linkStation, power);
+            return new PowerCalculationResult(device, linkStation, power >= 0 ? power : 0);
         }
 
         static string ErrorMessageGenerator(string message, string inputVariable)
